@@ -82,6 +82,9 @@
             align-items: center;
             flex-direction: column;
         }
+        .sell_box_1 > div{
+            display:flex;
+        }
         .sell_box{
             border-radius: 10px;
             border: 1px solid #0CFFB3;
@@ -136,6 +139,9 @@
         @media (max-width:768px) {
               .sell_box_1 ,  .sell_box{
                 width: 90% !important;
+              }
+              .sell_box_1 > div *{
+                font-size:14px;         
               }
         }
 

